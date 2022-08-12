@@ -3,7 +3,7 @@ const ganache = require('ganache-cli');
 const Web3 = require('web3');
 const web3 = new Web3(ganache.provider());
 
-const { interface, bytecode } = require('../compile');
+const { abi, evm } = require('../compile');
 
 let lottery;
 let accounts;
@@ -11,8 +11,8 @@ let accounts;
 beforeEach(async () => {
   accounts = await web3.eth.getAccounts();
 
-  lottery = await new web3.eth.Contract(JSON.parse(interface))
-    .deploy({ data: bytecode })
+  lottery = await new web3.eth.Contract(abi)
+    .deploy({ data: evm.bytecode.object })
     .send({ from: accounts[0], gas: '1000000' });
 });
 
@@ -25,7 +25,7 @@ describe('Lottery Contract', () => {
   it('allows one account to enter', async () => {
     await lottery.methods.enter().send({
       from: accounts[0],
-      value: web3.utils.toWei('0.02', 'ether')
+      value: web3.utils.toWei('0.02', 'ether') // util function to convert ether to wei (easier than typing all the 0s)
     });
 
     const players = await lottery.methods.getPlayers().call({
@@ -64,11 +64,11 @@ describe('Lottery Contract', () => {
     try {
       await lottery.methods.enter().send({
         from: accounts[0],
-        value: 0
+        value: 0 // value in Wei
       });
-      assert(false);
+      assert(false); // will fail test if it gets here (assert(false) is used to fail the unit test)
     } catch (err) {
-      assert(err);
+      assert(err); // if we get here (which is what we want) and we got an error message, then test will pass
     }
   });
 
@@ -89,11 +89,16 @@ describe('Lottery Contract', () => {
       value: web3.utils.toWei('2', 'ether')
     });
 
-    const initialBalance = await web3.eth.getBalance(accounts[0]);
+    // It can retrieve the balance of people's accounts (aka 'external accounts') and contract accounts
+    const initialBalance = await web3.eth.getBalance(accounts[0]); // (value in Wei)
     await lottery.methods.pickWinner().send({ from: accounts[0] });
     const finalBalance = await web3.eth.getBalance(accounts[0]);
     const difference = finalBalance - initialBalance;
 
-    assert(difference > web3.utils.toWei('1.8', 'ether'));
+    // It will be slighlty less than 2 ether because we have to pay for gas (on calling pickWinner())
+    assert(difference > web3.utils.toWei('1.9', 'ether')); // SEE VIDEO #94
+
+    // PS: We could also add an ASSERT to check if the array of players is now empty
+    // PS: We could also add an ASSERT to check that the contract balance is 0 (all $ was sent)
   });
 });
