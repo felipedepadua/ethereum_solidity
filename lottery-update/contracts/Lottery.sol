@@ -21,8 +21,8 @@ contract Lottery {
 
     function pickWinner() public restricted {
         uint index = random() % players.length;
-        players[index].transfer(address(this).balance);
-        players = new address payable[](0);
+        players[index].transfer(address(this).balance); // this.balance is the current amount of money that the contract has available
+        players = new address payable[](0); // initialize a dynamic array w/ initial size of 0
     }
 
     modifier restricted() {
@@ -33,4 +33,4 @@ contract Lottery {
     function getPlayers() public view returns (address payable[] memory) {
         return players;
     }
-}   
+}
