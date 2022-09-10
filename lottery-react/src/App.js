@@ -1,6 +1,6 @@
 import React from "react";
 import web3 from "./web3";
-import lottery from "./lottery";
+import lottery from "./lottery"; // The lottery contract instance
 
 class App extends React.Component {
   state = {
@@ -16,6 +16,11 @@ class App extends React.Component {
     const balance = await web3.eth.getBalance(lottery.options.address);
 
     this.setState({ manager, players, balance });
+
+    // Just for test
+    console.log(web3.version);
+    console.log(lottery.options.address);
+    web3.eth.getAccounts().then(console.log); // It prints the callback result int console.log
   }
 
   onSubmit = async (event) => {

@@ -4,6 +4,7 @@ pragma solidity ^0.8.9;
 
 contract Lottery {
     address public manager;
+    address public winner;
     address payable[] public players;
 
     constructor() {
@@ -21,6 +22,7 @@ contract Lottery {
 
     function pickWinner() public restricted {
         uint index = random() % players.length;
+        winner = players[index]; // Keep latest winner address for the record
         players[index].transfer(address(this).balance); // this.balance is the current amount of money that the contract has available
         players = new address payable[](0); // initialize a dynamic array w/ initial size of 0
     }
