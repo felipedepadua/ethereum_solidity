@@ -5,7 +5,7 @@ import web3 from "./web3";
 // 2) Go to 'lottery-update' and run 'node compile.js'
 // 3) Also in 'lottery-update', run 'node deploy.js'
 
-const address = "0xE7784c76F5B6aD5FDC61d44191e651Bf1a19C8e0"; // contract deployed to the rinkeby network
+const address = "0x41156C69Eb5db77343D889b32e5CB9Dc1663bd22"; // contract deployed to the rinkeby network
 
 // ABI that we get back after we deployed Lottery.sol (see compile.js) to rinkeby network
 const abi = [
@@ -13,6 +13,8 @@ const abi = [
     inputs: [],
     stateMutability: "nonpayable",
     type: "constructor",
+    constant: undefined,
+    payable: undefined,
     signature: "constructor",
   },
   {
@@ -28,7 +30,9 @@ const abi = [
   {
     inputs: [],
     name: "getPlayers",
-    outputs: [[Object]],
+    outputs: [
+      { internalType: "address payable[]", name: "", type: "address[]" },
+    ],
     stateMutability: "view",
     type: "function",
     constant: true,
@@ -38,7 +42,7 @@ const abi = [
   {
     inputs: [],
     name: "manager",
-    outputs: [[Object]],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
     constant: true,
@@ -56,9 +60,9 @@ const abi = [
     signature: "0x5d495aea",
   },
   {
-    inputs: [[Object]],
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     name: "players",
-    outputs: [[Object]],
+    outputs: [{ internalType: "address payable", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
     constant: true,
@@ -68,7 +72,7 @@ const abi = [
   {
     inputs: [],
     name: "winner",
-    outputs: [[Object]],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
     constant: true,
